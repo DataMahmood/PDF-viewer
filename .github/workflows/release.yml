@@ -1,9 +1,6 @@
 name: Publish v1.0.0 Release
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
