@@ -1,0 +1,78 @@
+name: Publish v1.0.0 Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create v1.0.0 tag and release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tag = 'v1.0.0';
+            const releaseName = 'Kaghaz PDF Viewer v1.0.0';
+            const body = [
+              '## Kaghaz PDF Viewer v1.0.0',
+              '',
+              'Initial standalone release of the browser-based PDF annotation reader.',
+              '',
+              '### Included',
+              '- Local PDF rendering with PDF.js',
+              '- Rectangle highlighting',
+              '- Freehand drawing and pen annotations',
+              '- Persian, Arabic, and English notes',
+              '- Select, move, recolor, edit, and delete annotations',
+              '- Eraser, undo, and redo',
+              '- JSON backup and restore',
+              '- Annotated PDF export',
+              '- Font-rendering fallback for difficult embedded fonts',
+              '',
+              '### Run',
+              'Open index.html locally or publish the repository with GitHub Pages.'
+            ].join('\n');
+
+            try {
+              await github.rest.git.getRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: 'tags/' + tag
+              });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+              await github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: 'refs/tags/' + tag,
+                sha: context.sha
+              });
+            }
+
+            try {
+              await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag
+              });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+              await github.rest.repos.createRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag_name: tag,
+                target_commitish: context.sha,
+                name: releaseName,
+                body,
+                draft: false,
+                prerelease: false,
+                generate_release_notes: false
+              });
+            }
