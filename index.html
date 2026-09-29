@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>کاغذ | PDF خوان و یادداشت‌برداری</title>
+  <style>
+    :root{font-family:Tahoma,Arial,sans-serif;color:#e9eff8;background:#101725;--panel:#182234;--line:#2c3a50;--accent:#76c9bd;--muted:#9dacbf}
+    *{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.45;cursor:default}
+    .app{height:100dvh;display:grid;grid-template-rows:auto 1fr}.top{display:flex;align-items:center;gap:12px;padding:12px 18px;background:#141e2e;border-bottom:1px solid var(--line);flex-wrap:wrap;z-index:4}
+    .brand{font-size:21px;font-weight:800;letter-spacing:-.5px;color:#fff;margin-left:8px}.brand i{display:inline-block;width:13px;height:13px;background:var(--accent);border-radius:4px;transform:rotate(-18deg);margin-left:7px}
+    .filename{color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+    .grow{flex:1}.btn{border:1px solid #384961;border-radius:10px;background:#223149;color:#f0f5fb;padding:9px 12px;min-height:38px;white-space:nowrap}.btn:hover{background:#2c405c}.btn.primary{background:var(--accent);color:#10232b;border-color:var(--accent);font-weight:700}.btn.primary:hover{background:#9adbd1}.btn.icon{min-width:38px;padding:7px}.btn.active{border-color:var(--accent);color:var(--accent);background:#173a41}
+    .content{min-height:0;display:grid;grid-template-columns:290px minmax(0,1fr);position:relative}.side{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}.sidehead{padding:18px;border-bottom:1px solid var(--line)}.sidehead h2{font-size:15px;margin:0 0 5px}.muted{color:var(--muted);font-size:12px}.notes{overflow:auto;padding:12px;flex:1}.note{background:#202d42;border:1px solid #35445a;border-radius:13px;padding:11px;margin-bottom:9px;cursor:pointer}.note:hover{border-color:var(--accent)}.noteTop{display:flex;justify-content:space-between;align-items:center;gap:8px;color:var(--accent);font-size:12px}.note p{margin:9px 0 0;white-space:pre-wrap;line-height:1.65;font-size:13px;overflow-wrap:anywhere}.smallbtn{background:none;border:0;color:#bac9da;font-size:16px}.smallbtn:hover{color:#ff9090}
+    .main{min-width:0;display:flex;flex-direction:column}.toolbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:9px 14px;background:#192538;border-bottom:1px solid var(--line)}.group{display:flex;gap:5px;align-items:center}.divider{height:26px;width:1px;background:var(--line);margin:0 5px}.toolhint{color:var(--muted);font-size:12px;margin-right:auto}.number{width:50px;background:#111b2a;color:white;border:1px solid #3b4c65;border-radius:8px;padding:7px;text-align:center;direction:ltr}.color{width:34px;height:34px;border:0;background:transparent;padding:1px}.range{width:78px;accent-color:var(--accent)}.note p,textarea{unicode-bidi:plaintext}
+    .scroll{overflow:auto;min-height:0;background:#101725;position:relative;scroll-behavior:smooth}.pages{min-height:100%;display:flex;flex-direction:column;align-items:center;gap:22px;padding:28px 22px 60px}.paper{position:relative;background:#fff;box-shadow:0 18px 48px #0008;flex:none;overflow:hidden}.paper canvas{display:block}.textLayer{position:absolute;inset:0;overflow:hidden;line-height:1;text-align:initial;direction:ltr;opacity:1;pointer-events:auto}.textLayer span,.textLayer br{color:transparent;position:absolute;white-space:pre;cursor:text;transform-origin:0 0}.textLayer ::selection{background:#53b8ff80}.marks,.interaction{position:absolute;inset:0;width:100%;height:100%}.marks{pointer-events:none}.interaction{pointer-events:none}.paper.mode-pen .interaction,.paper.mode-note .interaction,.paper.mode-highlight .interaction{pointer-events:auto;cursor:crosshair;touch-action:none}.paper:not(.mode-select) .textLayer{pointer-events:none;user-select:none}.mark-hit{pointer-events:visiblePainted;cursor:move}.selected-card{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}.selected-panel{padding:12px;border-bottom:1px solid var(--line);background:#203247}.selected-panel .row{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}.selected-panel .btn{min-height:33px;padding:6px 9px}.empty{margin:auto;text-align:center;max-width:500px;padding:40px 25px;border:1px dashed #425570;border-radius:22px;background:#192435}.empty .big{font-size:56px;margin-bottom:10px}.empty h1{font-size:22px;margin:0 0 12px}.empty p{color:var(--muted);line-height:1.9;font-size:14px}.empty .btn{margin-top:10px}.foot{background:#152134;border-top:1px solid var(--line);color:#a8b9cc;padding:8px 16px;font-size:12px;min-height:34px}
+    dialog{background:#1c2a3d;color:#f3f7fb;border:1px solid #475a70;border-radius:18px;width:min(460px,90vw);box-shadow:0 30px 80px #000b;padding:21px}dialog::backdrop{background:#0009}dialog h3{margin:0 0 14px}textarea{width:100%;min-height:120px;resize:vertical;background:#111d2d;color:#fff;border:1px solid #40536d;border-radius:10px;padding:11px;line-height:1.7}dialog .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:15px}.hide{display:none!important}
+    @media(max-width:800px){.content{grid-template-columns:1fr}.side{display:none}.side.open{display:flex;position:absolute;z-index:5;top:0;bottom:0;right:0;width:min(310px,88vw);box-shadow:-15px 0 35px #0008}.top{gap:7px;padding:8px}.brand{font-size:18px}.filename{max-width:130px}.toolhint{width:100%;margin:2px 0}.pages{padding:16px 10px 35px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand"><i></i>کاغذ</div><span class="filename" id="filename">PDF خوان و یادداشت‌برداری</span><span class="grow"></span>
+    <button class="btn" id="openBtn">باز کردن PDF</button><button class="btn" id="fontMode" disabled title="اگر متن فارسی درست دیده نشد، روش نمایش فونت را عوض کن">فونت: ترسیم دقیق</button><button class="btn" id="originalPdf" disabled>نمایش اصلی PDF</button><button class="btn" id="notesToggle">علامت‌ها</button>
+    <button class="btn" id="saveProject" disabled>ذخیرهٔ یادداشت‌ها</button><button class="btn primary" id="exportPdf" disabled>دریافت PDF</button>
+    <input id="fileInput" class="hide" type="file" accept="application/pdf,.pdf"><input id="projectInput" class="hide" type="file" accept="application/json,.json">
+  </header>
+  <div class="content">
+    <aside class="side" id="side"><div class="sidehead"><h2>همهٔ علامت‌ها <span id="noteCount">۰</span></h2><div class="muted">هر مورد را برای ویرایش انتخاب کن.</div></div><div class="selected-panel hide" id="selectedPanel"><strong id="selectedLabel">مورد انتخاب‌شده</strong><div class="row"><button class="btn" id="editText">ویرایش متن</button><button class="btn" id="deleteMark">حذف مورد</button></div><div class="muted" style="margin-top:8px">رنگ و ضخامت را از نوار بالا تغییر بده؛ با کشیدن، علامت را جابه‌جا کن.</div></div><div class="notes" id="notes"></div><div style="padding:12px;border-top:1px solid var(--line)"><button class="btn" id="importProject" style="width:100%">بازگرداندن علامت‌ها از JSON</button></div></aside>
+    <main class="main">
+      <div class="toolbar">
+        <div class="group"><button class="btn icon" id="prev" title="صفحهٔ قبل" disabled>→</button><input class="number" id="pageNo" type="number" min="1" value="1" disabled><span class="muted" id="pageTotal">/ ۰</span><button class="btn icon" id="next" title="صفحهٔ بعد" disabled>←</button></div>
+        <div class="divider"></div><div class="group"><button class="btn icon" id="zoomOut" disabled>−</button><span id="zoomLabel" style="min-width:46px;text-align:center;font-size:12px">۱۰۰٪</span><button class="btn icon" id="zoomIn" disabled>+</button><button class="btn" id="fit" disabled>اندازهٔ صفحه</button></div>
+        <div class="divider"></div><div class="group"><button class="btn active" data-mode="select">انتخاب متن</button><button class="btn" data-mode="edit">ویرایش علامت</button><button class="btn" data-mode="highlight">هایلایت</button><button class="btn" data-mode="pen">قلم</button><button class="btn" data-mode="note">یادداشت</button><button class="btn" data-mode="erase">پاک‌کن</button></div>
+        <div class="group"><input type="color" class="color" id="color" value="#ffe36e" title="رنگ"><input type="range" class="range" id="weight" min="1" max="12" value="3" title="ضخامت قلم"><button class="btn" id="undo" disabled>↶ بازگشت</button><button class="btn" id="redo" disabled>↷ دوباره</button></div>
+        <div class="toolhint" id="hint">یک فایل PDF باز کن یا آن را روی صفحه بکش.</div>
+      </div>
+      <div class="scroll" id="scroll"><div class="pages" id="pages"><div class="empty" id="empty"><div class="big">📄</div><h1>PDF خودت را اینجا باز کن</h1><p>برای هایلایت روی متن کادر بکش؛ روی صفحه نقاشی کن و در نقطهٔ دلخواه یادداشت بگذار. هر علامت جداگانه ویرایش می‌شود.</p><button class="btn primary" id="emptyOpen">انتخاب فایل PDF</button></div></div></div>
+      <div class="foot" id="status">فایل فقط در مرورگر شما پردازش می‌شود. برای اجرای اولیه اتصال اینترنت لازم است.</div>
+    </main>
+  </div>
+</div>
+<dialog id="noteDialog"><h3 id="dialogTitle">یادداشت جدید</h3><textarea id="noteText" dir="auto" placeholder="یادداشت خود را بنویسید..."></textarea><div class="actions"><button class="btn" id="cancelNote">انصراف</button><button class="btn primary" id="confirmNote">ثبت یادداشت</button></div></dialog>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script>
+(()=>{
+  'use strict';
+  const $=id=>document.getElementById(id), pages=$('pages'), scroll=$('scroll');
+  const state={pdf:null,bytes:null,key:'',name:'',marks:[],mode:'select',scale:1,renderVersion:0,edit:null,page:1,busy:false,selectedId:null,history:[],historyAt:0,originalUrl:null,fontPaths:true};
+  const worker='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc=worker;
+  const color=()=> $('color').value;
+  function msg(s){$('status').textContent=s}
+  function enabled(v){for(const id of ['saveProject','exportPdf','fontMode','originalPdf','prev','next','pageNo','zoomOut','zoomIn','fit'])$(id).disabled=!v;updateUndo()}
+  function updateUndo(){$('undo').disabled=state.historyAt===0;$('redo').disabled=state.historyAt>=state.history.length-1}
+  function keyFor(f){return 'kaghaz:v1:'+f.name+':'+f.size+':'+f.lastModified}
+  const snapshot=()=>JSON.stringify(state.marks);
+  function persist(){try{localStorage.setItem(state.key,snapshot());msg('تغییرات در این مرورگر ذخیره شد.')}catch{msg('فضای مرورگر برای ذخیره کافی نیست؛ از «ذخیرهٔ یادداشت‌ها» استفاده کن.')}renderMarks();renderNotes();updateUndo()}
+  function commit(){const next=snapshot();if(state.history[state.historyAt]!==next){state.history=state.history.slice(0,state.historyAt+1);state.history.push(next);state.historyAt++}persist()}
+  function restore(index){state.historyAt=index;state.marks=JSON.parse(state.history[index]);if(!state.marks.some(m=>m.id===state.selectedId))state.selectedId=null;persist()}
+  async function openFile(file){
+    if(!file||(!file.name.toLowerCase().endsWith('.pdf')&&file.type!=='application/pdf')){msg('یک فایل PDF معتبر انتخاب کن.');return}
+    if(!window.pdfjsLib){msg('کتابخانهٔ نمایش PDF بارگذاری نشد. اینترنت را بررسی کن و صفحه را دوباره باز کن.');return}
+    try{
+      msg('در حال باز کردن PDF…');const bytes=new Uint8Array(await file.arrayBuffer());const pdf=await pdfjsLib.getDocument({data:bytes.slice(),disableFontFace:state.fontPaths}).promise;
+      if(state.originalUrl)URL.revokeObjectURL(state.originalUrl);
+      state.pdf=pdf;state.bytes=bytes;state.key=keyFor(file);state.name=file.name;state.page=1;state.scale=1;state.marks=[];state.selectedId=null;
+      state.originalUrl=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
+      try{const saved=JSON.parse(localStorage.getItem(state.key)||'[]');if(Array.isArray(saved))state.marks=saved.filter(validMark)}catch{}
+      state.history=[snapshot()];state.historyAt=0;
+      $('filename').textContent=file.name;$('pageTotal').textContent='/ '+pdf.numPages.toLocaleString('fa-IR');$('pageNo').max=pdf.numPages;$('empty')?.remove();enabled(true);renderNotes();await renderAll();msg('فایل باز شد. برای هایلایت، کادری روی متن بکش.');
+    }catch(e){console.error(e);msg('باز کردن PDF ناموفق بود: '+(e.message||e))}
+  }
+  function validMark(m){return m&&['highlight','pen','note'].includes(m.type)&&Number.isInteger(m.page)&&m.page>0}
+  async function renderAll(){
+    if(!state.pdf)return;const version=++state.renderVersion;pages.replaceChildren();$('zoomLabel').textContent=Math.round(state.scale*100)+'٪';
+    for(let number=1;number<=state.pdf.numPages;number++){
+      if(version!==state.renderVersion)return;
+      const page=await state.pdf.getPage(number),viewport=page.getViewport({scale:state.scale});
+      const paper=document.createElement('div');paper.className='paper mode-'+state.mode;paper.dataset.page=number;paper.style.width=viewport.width+'px';paper.style.height=viewport.height+'px';
+      const canvas=document.createElement('canvas');const pixelRatio=Math.min(devicePixelRatio||1,2);canvas.width=Math.ceil(viewport.width*pixelRatio);canvas.height=Math.ceil(viewport.height*pixelRatio);canvas.style.width=viewport.width+'px';canvas.style.height=viewport.height+'px';paper.append(canvas);
+      const layer=document.createElement('div');layer.className='textLayer';paper.append(layer);
+      const marks=document.createElementNS('http://www.w3.org/2000/svg','svg');marks.classList.add('marks');marks.setAttribute('viewBox','0 0 1000 1000');marks.setAttribute('preserveAspectRatio','none');paper.append(marks);
+      const interaction=document.createElement('div');interaction.className='interaction';paper.append(interaction);pages.append(paper);
+      const context=canvas.getContext('2d',{alpha:false});await page.render({canvasContext:context,viewport,transform:[pixelRatio,0,0,pixelRatio,0,0]}).promise;
+      if(version!==state.renderVersion)return;
+      try{const textContent=await page.getTextContent();await pdfjsLib.renderTextLayer({textContentSource:textContent,container:layer,viewport,textDivs:[]}).promise}catch(e){console.warn('Text layer:',e)}
+      interaction.addEventListener('pointerdown',e=>startInteraction(e,paper));paper.addEventListener('pointerdown',e=>{if(state.mode==='edit'&&!e.target.closest?.('.mark-hit'))selectMark(null)});renderPageMarks(paper);
+    }
+    updatePageFromScroll();
+  }
+  function renderMarks(){document.querySelectorAll('.paper').forEach(renderPageMarks)}
+  function svg(tag,attrs){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,String(v));return e}
+  function renderPageMarks(paper){
+    const group=paper.querySelector('.marks'),number=Number(paper.dataset.page);group.replaceChildren();
+    for(const m of state.marks.filter(x=>x.page===number)){
+      const item=svg('g',{}),selected=state.selectedId===m.id;
+      if(m.type==='highlight')for(const r of m.rects||[])item.append(svg('rect',{x:r.x*1000,y:r.y*1000,width:r.w*1000,height:r.h*1000,fill:m.color,'fill-opacity':'.43',stroke:selected?'#168bd5':'none','stroke-width':selected?2:0,class:'mark-hit'}));
+      if(m.type==='pen'&&m.points?.length){const d=m.points.map((p,i)=>(i?'L':'M')+(p[0]*1000).toFixed(2)+' '+(p[1]*1000).toFixed(2)).join(' ');if(selected)item.append(svg('path',{d,fill:'none',stroke:'#fff','stroke-width':(m.width||3)*state.scale+6,'stroke-linecap':'round','stroke-linejoin':'round','vector-effect':'non-scaling-stroke'}));item.append(svg('path',{d,fill:'none',stroke:m.color,'stroke-width':(m.width||3)*state.scale,'stroke-linecap':'round','stroke-linejoin':'round','vector-effect':'non-scaling-stroke'}));item.append(svg('path',{d,fill:'none',stroke:'transparent','stroke-width':Math.max(18,(m.width||3)*state.scale+12),'stroke-linecap':'round','stroke-linejoin':'round','vector-effect':'non-scaling-stroke',class:'mark-hit'}))}
+      if(m.type==='note'){const pin=svg('g',{transform:`translate(${m.x*1000} ${m.y*1000})`});pin.append(svg('circle',{r:21,fill:selected?'#168bd5':'#263a53',stroke:'#fff','stroke-width':3}));pin.append(svg('circle',{r:13,fill:m.color}));const t=svg('text',{x:0,y:5,'text-anchor':'middle',fill:'#10212c','font-size':18,'font-weight':'bold','pointer-events':'none'});t.textContent='✎';pin.append(t);pin.append(svg('circle',{r:24,fill:'transparent',class:'mark-hit'}));item.append(pin)}
+      item.addEventListener('pointerdown',e=>{if(state.mode==='erase'){e.preventDefault();e.stopPropagation();deleteMark(m.id);return}if(state.mode!=='edit')return;e.stopPropagation();e.preventDefault();selectMark(m.id);const start=point(e,paper),before=structuredClone(m);let moved=false;
+        const move=ev=>{const current=point(ev,paper),dx=current[0]-start[0],dy=current[1]-start[1];if(Math.abs(dx)+Math.abs(dy)>.002)moved=true;moveMark(m,before,dx,dy);renderPageMarks(paper)};
+        const end=()=>{window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',end);window.removeEventListener('pointercancel',end);if(moved)commit()};window.addEventListener('pointermove',move);window.addEventListener('pointerup',end,{once:true});window.addEventListener('pointercancel',end,{once:true});
+      });group.append(item);
+    }
+  }
+  function moveMark(m,before,dx,dy){const clamp=n=>Math.max(0,Math.min(1,n));if(m.type==='note'){m.x=clamp(before.x+dx);m.y=clamp(before.y+dy)}else if(m.type==='pen'){m.points=before.points.map(p=>[clamp(p[0]+dx),clamp(p[1]+dy)])}else if(m.type==='highlight'){m.rects=before.rects.map(r=>({...r,x:Math.max(0,Math.min(1-r.w,r.x+dx)),y:Math.max(0,Math.min(1-r.h,r.y+dy))}))}}
+  function selectMark(id){state.selectedId=id;const m=state.marks.find(x=>x.id===id);if(m){$('color').value=m.color||'#ffe36e';if(m.type==='pen')$('weight').value=m.width||3;$('side').classList.add('open')}renderMarks();renderNotes()}
+  function point(e,paper){const b=paper.getBoundingClientRect();return [Math.max(0,Math.min(1,(e.clientX-b.left)/b.width)),Math.max(0,Math.min(1,(e.clientY-b.top)/b.height))]}
+  function startInteraction(e,paper){if(e.button!==0)return;const page=Number(paper.dataset.page),[x,y]=point(e,paper);
+    if(state.mode==='note'){state.edit={type:'new',page,x,y};$('noteText').value='';$('dialogTitle').textContent='یادداشت جدید';$('noteDialog').showModal();$('noteText').focus();return}
+    if(!['pen','highlight'].includes(state.mode))return;e.preventDefault();const target=paper.querySelector('.interaction');target.setPointerCapture(e.pointerId);
+    const m=state.mode==='pen'?{id:crypto.randomUUID(),type:'pen',page,color:color(),width:Number($('weight').value),points:[[x,y]]}:{id:crypto.randomUUID(),type:'highlight',page,color:color(),rects:[{x,y,w:0,h:0}]};state.marks.push(m);renderPageMarks(paper);
+    const move=ev=>{const [xx,yy]=point(ev,paper);if(m.type==='pen')m.points.push([xx,yy]);else m.rects=[{x:Math.min(x,xx),y:Math.min(y,yy),w:Math.abs(xx-x),h:Math.abs(yy-y)}];renderPageMarks(paper)};
+    const done=()=>{target.removeEventListener('pointermove',move);target.removeEventListener('pointerup',done);target.removeEventListener('pointercancel',done);if(m.type==='highlight'&&(m.rects[0].w<.003||m.rects[0].h<.003))state.marks.pop();else commit();renderMarks()};
+    target.addEventListener('pointermove',move);target.addEventListener('pointerup',done,{once:true});target.addEventListener('pointercancel',done,{once:true});
+  }
+  function editNote(m){state.edit={type:'edit',id:m.id};$('noteText').value=m.text;$('dialogTitle').textContent='ویرایش یادداشت';$('noteDialog').showModal();$('noteText').focus()}
+  function renderNotes(){const box=$('notes');box.replaceChildren();$('noteCount').textContent=state.marks.length.toLocaleString('fa-IR');const selected=state.marks.find(m=>m.id===state.selectedId);$('selectedPanel').classList.toggle('hide',!selected);if(selected){$('selectedLabel').textContent=({highlight:'هایلایت',pen:'خط',note:'یادداشت'}[selected.type]||'علامت')+' · صفحهٔ '+selected.page.toLocaleString('fa-IR');$('editText').classList.toggle('hide',selected.type!=='note')}
+    if(!state.marks.length){const e=document.createElement('p');e.className='muted';e.style.padding='8px';e.textContent='هنوز علامتی ثبت نشده است.';box.append(e);return}
+    for(const m of state.marks){const card=document.createElement('div');card.className='note';if(state.selectedId===m.id)card.classList.add('selected-card');const top=document.createElement('div');top.className='noteTop';const label=document.createElement('span');label.textContent=({highlight:'هایلایت',pen:'خط',note:'یادداشت'}[m.type]||'علامت')+' · صفحهٔ '+m.page.toLocaleString('fa-IR');const del=document.createElement('button');del.className='smallbtn';del.title='حذف این علامت';del.textContent='×';del.onclick=e=>{e.stopPropagation();deleteMark(m.id)};top.append(label,del);card.append(top);if(m.type==='note'){const p=document.createElement('p');p.dir='auto';p.textContent=m.text;card.append(p)}card.onclick=()=>{setMode('edit');selectMark(m.id);go(m.page)};box.append(card)}
+  }
+  function deleteMark(id){state.marks=state.marks.filter(x=>x.id!==id);if(state.selectedId===id)state.selectedId=null;commit()}
+  function go(n){if(!state.pdf)return;n=Math.max(1,Math.min(state.pdf.numPages,Number(n)||1));state.page=n;$('pageNo').value=n;document.querySelector(`.paper[data-page="${n}"]`)?.scrollIntoView({behavior:'smooth',block:'start'})}
+  function updatePageFromScroll(){const list=[...document.querySelectorAll('.paper')];if(!list.length)return;const top=scroll.getBoundingClientRect().top+80;let closest=list[0],distance=Infinity;for(const el of list){const d=Math.abs(el.getBoundingClientRect().top-top);if(d<distance){distance=d;closest=el}}state.page=Number(closest.dataset.page);$('pageNo').value=state.page}
+  let scrollTimer;scroll.addEventListener('scroll',()=>{clearTimeout(scrollTimer);scrollTimer=setTimeout(updatePageFromScroll,90)});
+  function setMode(mode){state.mode=mode;document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));document.querySelectorAll('.paper').forEach(p=>p.className='paper mode-'+mode);if(mode==='pen'&&$('color').value==='#ffe36e')$('color').value='#215ec5';$('hint').textContent={select:'متن PDF را انتخاب و کپی کن.',edit:'روی علامت کلیک کن، آن را بکش یا از فهرست سمت راست انتخاب کن.',highlight:'با ماوس یا قلم یک کادر روی عبارت موردنظر بکش.',pen:'با ماوس یا قلم روی صفحه بکش.',note:'برای ثبت یادداشت روی محل دلخواه صفحه کلیک کن.',erase:'روی هر علامت کلیک کن تا حذف شود؛ بازگشت هم در دسترس است.'}[mode]}
+  document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+  $('openBtn').onclick=$('emptyOpen').onclick=()=>$('fileInput').click();$('fileInput').onchange=e=>{openFile(e.target.files[0]);e.target.value=''};
+  $('fontMode').onclick=async()=>{if(!state.bytes||state.busy)return;const next=!state.fontPaths;state.busy=true;$('fontMode').disabled=true;msg('در حال تغییر روش نمایش فونت…');try{const pdf=await pdfjsLib.getDocument({data:state.bytes.slice(),disableFontFace:next}).promise;const old=state.pdf,page=state.page;state.pdf=pdf;state.fontPaths=next;$('fontMode').textContent=next?'فونت: ترسیم دقیق':'فونت: استاندارد';await renderAll();go(page);old?.destroy();msg('روش نمایش فونت تغییر کرد. اگر فارسی هنوز مشکل دارد، «نمایش اصلی PDF» را امتحان کن.')}catch(e){console.error(e);msg('تغییر روش نمایش فونت ممکن نشد: '+(e.message||e))}finally{state.busy=false;$('fontMode').disabled=false}};
+  $('originalPdf').onclick=()=>{if(state.originalUrl)window.open(state.originalUrl,'_blank','noopener')};
+  $('color').oninput=()=>{const m=state.marks.find(x=>x.id===state.selectedId);if(m){m.color=color();renderMarks()}};
+  $('color').onchange=()=>{if(state.marks.some(x=>x.id===state.selectedId))commit()};
+  $('weight').oninput=()=>{const m=state.marks.find(x=>x.id===state.selectedId);if(m?.type==='pen'){m.width=Number($('weight').value);renderMarks()}};
+  $('weight').onchange=()=>{if(state.marks.some(x=>x.id===state.selectedId&&x.type==='pen'))commit()};
+  $('deleteMark').onclick=()=>{if(state.selectedId)deleteMark(state.selectedId)};$('editText').onclick=()=>{const m=state.marks.find(x=>x.id===state.selectedId);if(m?.type==='note')editNote(m)};
+  $('prev').onclick=()=>go(state.page-1);$('next').onclick=()=>go(state.page+1);$('pageNo').onchange=e=>go(e.target.value);
+  async function zoom(v){if(!state.pdf)return;const page=state.page;state.scale=Math.max(.45,Math.min(2.5,v));msg('در حال تغییر اندازه…');await renderAll();go(page);msg('اندازهٔ صفحه: '+Math.round(state.scale*100)+'٪')}
+  $('zoomOut').onclick=()=>zoom(state.scale-.15);$('zoomIn').onclick=()=>zoom(state.scale+.15);
+  $('fit').onclick=async()=>{if(!state.pdf)return;const p=await state.pdf.getPage(state.page),v=p.getViewport({scale:1});zoom(Math.min(2.5,(scroll.clientWidth-48)/v.width))};
+  $('undo').onclick=()=>{if(state.historyAt>0)restore(state.historyAt-1)};$('redo').onclick=()=>{if(state.historyAt<state.history.length-1)restore(state.historyAt+1)};$('notesToggle').onclick=()=>$('side').classList.toggle('open');
+  $('cancelNote').onclick=()=>$('noteDialog').close();$('confirmNote').onclick=()=>{const value=$('noteText').value.trim();if(!value){$('noteText').focus();return}const edit=state.edit;if(edit?.type==='new')state.marks.push({id:crypto.randomUUID(),type:'note',page:edit.page,x:edit.x,y:edit.y,color:'#ffc96b',text:value});else{const m=state.marks.find(x=>x.id===edit?.id);if(m)m.text=value}state.edit=null;$('noteDialog').close();commit()};
+  function download(bytes,name,type){const blob=new Blob([bytes],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000)}
+  $('saveProject').onclick=()=>{if(!state.pdf)return;download(JSON.stringify({app:'Kaghaz',version:1,file:state.name,pages:state.pdf.numPages,marks:state.marks},null,2),state.name.replace(/\.pdf$/i,'')+'-notes.json','application/json')};
+  $('importProject').onclick=()=>$('projectInput').click();$('projectInput').onchange=async e=>{const file=e.target.files[0];if(!file||!state.pdf)return;try{const obj=JSON.parse(await file.text());if(obj.file!==state.name||obj.pages!==state.pdf.numPages)throw Error('این علامت‌ها متعلق به PDF باز شده نیستند.');if(!Array.isArray(obj.marks))throw Error('فایل علامت‌ها معتبر نیست.');state.marks=obj.marks.filter(validMark);state.selectedId=null;commit();msg('علامت‌ها بازگردانده شدند.')}catch(err){msg(err.message)}e.target.value=''};
+  // Highlight and ink remain vector graphics over the original searchable PDF.
+  // Persian note text is rendered into small note pages to keep its shaping correct.
+  $('exportPdf').onclick=async()=>{
+    if(!state.pdf||state.busy)return;if(!window.PDFLib){msg('کتابخانهٔ خروجی بارگذاری نشد. اینترنت را بررسی کن.');return}
+    state.busy=true;$('exportPdf').disabled=true;msg('در حال ساخت PDF…');
+    try{
+      const doc=await PDFLib.PDFDocument.load(state.bytes.slice(),{ignoreEncryption:false});
+      const viewports=new Map();
+      for(const m of state.marks){if(m.page>doc.getPageCount())continue;const page=doc.getPage(m.page-1);if(!viewports.has(m.page))viewports.set(m.page,(await state.pdf.getPage(m.page)).getViewport({scale:1}));const viewport=viewports.get(m.page),c=PDFLib.rgb(...[1,3,5].map(i=>parseInt((m.color||'#ffe36e').slice(i,i+2),16)/255));
+        const pdfPoint=(x,y)=>{const [px,py]=viewport.convertToPdfPoint(x*viewport.width,y*viewport.height);return {x:px,y:py}};
+        if(m.type==='highlight')for(const r of m.rects||[]){const a=pdfPoint(r.x,r.y),b=pdfPoint(r.x+r.w,r.y+r.h);page.drawRectangle({x:Math.min(a.x,b.x),y:Math.min(a.y,b.y),width:Math.abs(a.x-b.x),height:Math.abs(a.y-b.y),color:c,opacity:.42})}
+        if(m.type==='pen')for(let i=1;i<(m.points||[]).length;i++){const a=m.points[i-1],b=m.points[i];page.drawLine({start:pdfPoint(a[0],a[1]),end:pdfPoint(b[0],b[1]),thickness:m.width||3,color:c,opacity:.95})}
+        if(m.type==='note'){const p=pdfPoint(m.x,m.y);page.drawCircle({x:p.x,y:p.y,size:8,color:PDFLib.rgb(1,.72,.24),borderColor:PDFLib.rgb(.3,.2,.05),borderWidth:1})}
+      }
+      const notes=state.marks.filter(m=>m.type==='note');if(notes.length){
+        const W=840,H=1188,cv=document.createElement('canvas');cv.width=W;cv.height=H;const ctx=cv.getContext('2d');let y=105;
+        const begin=()=>{ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.direction='rtl';ctx.textAlign='right';ctx.fillStyle='#192c42';ctx.font='bold 32px Tahoma, Arial';ctx.fillText('یادداشت‌های PDF',W-70,65);ctx.strokeStyle='#c9d7dd';ctx.beginPath();ctx.moveTo(70,85);ctx.lineTo(W-70,85);ctx.stroke();y=135};
+        const flush=async()=>{const img=await doc.embedPng(await (await fetch(cv.toDataURL('image/png'))).arrayBuffer());const p=doc.addPage([595,842]);p.drawImage(img,{x:0,y:0,width:595,height:842})};begin();
+        for(const [i,n] of notes.entries()){ctx.font='20px Tahoma, Arial';const maxWidth=W-150,words=n.text.split(/\s+/),lines=[];let line='';for(const word of words){const trial=line?line+' '+word:word;if(ctx.measureText(trial).width>maxWidth&&line){lines.push(line);line=word}else line=trial}if(line)lines.push(line);
+          for(const part of (lines.length?lines:[''])){if(y>H-80){await flush();begin()}if(part===lines[0]){ctx.fillStyle='#355f6c';ctx.font='bold 18px Tahoma, Arial';ctx.fillText(`یادداشت ${i+1} · صفحه ${n.page}`,W-70,y);y+=31}ctx.font='20px Tahoma, Arial';ctx.fillStyle='#243449';ctx.fillText(part,W-70,y);y+=33}y+=24;
+        }await flush();
+      }
+      download(await doc.save(),state.name.replace(/\.pdf$/i,'')+'-annotated.pdf','application/pdf');msg('PDF همراه با هایلایت، نقاشی و صفحات یادداشت آماده شد.');
+    }catch(e){console.error(e);msg('ساخت خروجی ناموفق بود: '+(e.message||e))}finally{state.busy=false;$('exportPdf').disabled=false}
+  };
+  scroll.addEventListener('dragover',e=>{e.preventDefault()});scroll.addEventListener('drop',e=>{e.preventDefault();openFile(e.dataTransfer.files[0])});
+  document.addEventListener('keydown',e=>{const typing=/^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName||'');if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='o'){e.preventDefault();$('fileInput').click()}if(!typing&&(e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();(e.shiftKey?$('redo'):$('undo')).click()}if(!typing&&(e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){e.preventDefault();$('redo').click()}if(!typing&&['Delete','Backspace'].includes(e.key)&&state.selectedId&&!$('noteDialog').open){e.preventDefault();deleteMark(state.selectedId)}if(e.key==='Escape'&&$('noteDialog').open)$('noteDialog').close()});
+  renderNotes();
+})();
+</script>
+</body>
+</html>
