@@ -17,12 +17,13 @@ jobs:
       - name: Check out the release source
         uses: actions/checkout@v4
 
-      - name: Create v1.0.0 tag and release
+      - name: Create release and attach standalone HTML
         uses: actions/github-script@v7
         with:
           script: |
+            const fs = require('fs');
             const tag = 'v1.0.0';
-            const releaseName = 'Kaghaz PDF Viewer v1.0.0';
+            const assetName = 'Kaghaz-PDF-Viewer-v1.0.0.html';
             const body = [
               '## Kaghaz PDF Viewer v1.0.0',
               '',
@@ -40,14 +41,15 @@ jobs:
               '- Font-rendering fallback for difficult embedded fonts',
               '',
               '### Download',
-              'Download the index.html asset below and open it in a current browser.'
+              'Download the standalone HTML file from the release assets.'
             ].join('\n');
 
+            let release;
             try {
-              await github.rest.git.getRef({
+              release = await github.rest.repos.getReleaseByTag({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                ref: 'tags/' + tag
+                tag
               });
             } catch (error) {
               if (error.status !== 404) throw error;
@@ -57,34 +59,37 @@ jobs:
                 ref: 'refs/tags/' + tag,
                 sha: context.sha
               });
-            }
-
-            try {
-              await github.rest.repos.getReleaseByTag({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                tag
-              });
-            } catch (error) {
-              if (error.status !== 404) throw error;
-              await github.rest.repos.createRelease({
+              release = await github.rest.repos.createRelease({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 tag_name: tag,
                 target_commitish: context.sha,
-                name: releaseName,
+                name: 'Kaghaz PDF Viewer v1.0.0',
                 body,
                 draft: false,
-                prerelease: false,
-                generate_release_notes: false
+                prerelease: false
               });
             }
 
-      - name: Attach standalone HTML file
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v1.0.0
-          name: Kaghaz PDF Viewer v1.0.0
-          body_path: RELEASE_NOTES.md
-          files: index.html
-          overwrite_files: true
+            const assets = await github.rest.repos.listReleaseAssets({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: release.data.id
+            });
+            const oldAsset = assets.data.find(asset => asset.name === assetName);
+            if (oldAsset) {
+              await github.rest.repos.deleteReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                asset_id: oldAsset.id
+              });
+            }
+
+            const file = fs.readFileSync('index.html');
+            await github.rest.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: release.data.id,
+              name: assetName,
+              data: file
+            });
